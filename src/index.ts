@@ -7,6 +7,7 @@ import { ConfigService } from "./services/config";
 import inquirer from "inquirer";
 import { RunrunitService } from "./services/api";
 import { AxiosError } from "axios";
+import chalk from "chalk";
 
 async function main() {
   await presentation();
@@ -56,15 +57,15 @@ async function main() {
       const service =
         type === "play" ? runrunitService.playCard : runrunitService.pauseCard;
 
-      const task = await service(Number(cardId)).catch((error: AxiosError) => {
-        logger.error("Error playing card");
-        logger.error("API Response", error.response?.data);
-      });
-
-      logger.debug("Card: ", task);
+      const task = await service
+        .bind(runrunitService)(Number(cardId))
+        .catch((error: AxiosError) => {
+          logger.error("Error playing card");
+          logger.error("API Response", error.response?.data);
+        });
 
       if (task) {
-        logger.success(`${type} card ${cardId}`);
+        logger.success(`${type} card ${cardId}: ${chalk.bold(task.title)}`);
       }
       await ConfigService.set({ LAST_CARD_ID: cardId });
     };

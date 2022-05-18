@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance, AxiosRequestHeaders } from "axios";
 import {
   Board,
   ChangeTaskStatus,
@@ -8,6 +8,7 @@ import {
   TaskStatus,
   TaskType,
 } from "../data/runrunit";
+import { logger } from "../utils/logger";
 import { ConfigService } from "./config";
 
 export class RunrunitService {
@@ -18,9 +19,14 @@ export class RunrunitService {
 
     if (!config.APP_KEY || !config.USER_TOKEN) return;
 
+    const headers: AxiosRequestHeaders = {
+      "App-Key": config.APP_KEY,
+      "User-Token": config.USER_TOKEN,
+    };
+
     this.api = axios.create({
       baseURL: "https://runrun.it/api/v1.0",
-      headers: { "App-Key": config.APP_KEY, "User-Token": config.USER_TOKEN },
+      headers,
     });
   }
 
