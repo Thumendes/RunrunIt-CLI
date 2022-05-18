@@ -5,4 +5,7 @@ node_modules
 .config/config.json
 .env
 .env.*
+
+# Generated Code
 bin
+lib
